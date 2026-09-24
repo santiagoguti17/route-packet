@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>ROUTE PACKET // SURVIVE 30S</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect width='16' height='16' fill='%23020403'/%3E%3Crect x='4' y='4' width='8' height='8' fill='%233dff7a'/%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <main class="shell">
+
+    <!-- HUD: barra de progreso y tiempo -->
+    <header class="hud">
+      <div class="hud-row">
+        <span class="hud-label green">UPTIME</span>
+        <div class="bar" aria-label="Progreso de la partida">
+          <div class="bar-fill" id="bar-fill"></div>
+        </div>
+        <span class="hud-label yellow">STRIKES LEFT 0</span>
+      </div>
+      <div class="hud-row sub">
+        <span id="hud-time">TIME: 0.0 / 30.0</span>
+        <span id="hud-status" class="yellow">THREAT: LOW</span>
+      </div>
+    </header>
+
+    <!-- Área de juego -->
+    <section class="stage" id="stage">
+      <canvas id="game" width="480" height="640"></canvas>
+      <div class="scanlines"></div>
+
+      <div class="overlay start" id="overlay-start">
+        <h1 class="title">ROUTE PACKET</h1>
+        <p class="subtitle">SURVIVE 30 SECONDS<br>DODGE THE RED. DON'T TOUCH THE WALLS.</p>
+        <button class="btn" id="btn-start">START</button>
+      </div>
+
+      <div class="overlay over hidden" id="overlay-over">
+        <h2 class="title">GAME OVER</h2>
+        <p class="subtitle" id="over-time">SURVIVED 0.00s</p>
+        <p class="subtitle dim">PACKET DROPPED</p>
+        <button class="btn" id="btn-retry">TRY AGAIN</button>
+      </div>
+
+      <div class="overlay win hidden" id="overlay-win">
+        <h2 class="title">YOU SURVIVED!</h2>
+        <p class="subtitle">30 SECONDS COMPLETE</p>
+        <p class="subtitle dim">PACKET DELIVERED</p>
+        <button class="btn" id="btn-again">PLAY AGAIN</button>
+      </div>
+    </section>
+
+    <!-- Indicador de controles -->
+    <footer class="controls-hint">
+      <span>&larr; A</span>
+      <span class="hint-title">ROUTE PACKET</span>
+      <span>D &rarr;</span>
+    </footer>
+
+    <!-- Controles táctiles (solo en pantallas táctiles) -->
+    <div class="touch-controls" id="touch-controls">
+      <button class="touch-btn" id="btn-left" aria-label="Mover a la izquierda">&larr;</button>
+      <button class="touch-btn" id="btn-right" aria-label="Mover a la derecha">&rarr;</button>
+    </div>
+
+  </main>
+
+  <script src="js/config.js"></script>
+  <script src="js/utils.js"></script>
+  <script src="js/difficulty.js"></script>
+  <script src="js/timer.js"></script>
+  <script src="js/input.js"></script>
+  <script src="js/obstacles.js"></script>
+  <script src="js/collision.js"></script>
+  <script src="js/effects.js"></script>
+  <script src="js/renderer.js"></script>
+  <script src="js/ui.js"></script>
+  <script src="js/game.js"></script>
+</body>
+</html>

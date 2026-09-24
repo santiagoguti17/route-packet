@@ -1,0 +1,295 @@
+/* =========================================================
+   ROUTE PACKET — estilo terminal arcade / cyberpunk minimal
+   ========================================================= */
+
+:root {
+  --bg: #020403;
+  --green: #3dff7a;
+  --green-text: #8cffb0;
+  --green-dim: #0f3d1c;
+  --green-mid: #2f8a4a;
+  --red: #ff4d4d;
+  --yellow: #ffd23f;
+  --font: 'Share Tech Mono', 'JetBrains Mono', 'Fira Code', 'SF Mono', Menlo, Consolas, monospace;
+  --reserved: 200px; /* alto reservado para HUD + pie */
+}
+
+@media (pointer: coarse) {
+  :root { --reserved: 290px; }
+}
+
+/* Pantallas muy bajas (móvil en horizontal): menos espacio reservado. */
+@media (max-height: 520px) {
+  :root { --reserved: 140px; }
+  .shell { gap: 8px; }
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+html, body {
+  height: 100%;
+  background: var(--bg);
+  color: var(--green-text);
+  font-family: var(--font);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  overflow: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+body {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: radial-gradient(ellipse at center, #04120a 0%, var(--bg) 70%);
+}
+
+/* El HUD y el pie usan todo el ancho del contenedor; el área de juego se
+   limita además por el alto disponible para no salirse de la pantalla. */
+.shell {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  width: min(480px, 92vw);
+}
+
+/* ---------- HUD ---------- */
+
+.hud {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: clamp(11px, 2.6vw, 14px);
+}
+
+.hud-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  white-space: nowrap;
+}
+
+.hud-row .hud-label { flex-shrink: 0; }
+
+.hud-row.sub {
+  justify-content: space-between;
+  flex-wrap: wrap;
+  row-gap: 2px;
+  opacity: 0.9;
+}
+
+.green {
+  color: var(--green);
+  text-shadow: 0 0 8px rgba(61, 255, 122, 0.7);
+}
+
+.yellow {
+  color: var(--yellow);
+  text-shadow: 0 0 6px rgba(255, 210, 63, 0.5);
+}
+
+.bar {
+  flex: 1;
+  min-width: 40px;
+  height: 12px;
+  border: 1px solid var(--green-dim);
+  background: #03110a;
+  position: relative;
+  overflow: hidden;
+}
+
+.bar-fill {
+  height: 100%;
+  width: 0%;
+  background: var(--green);
+  box-shadow: 0 0 10px var(--green), 0 0 20px rgba(61, 255, 122, 0.5);
+  transition: width 0.08s linear;
+}
+
+/* segmentos tipo bloques ████ */
+.bar::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    to right,
+    transparent 0,
+    transparent calc(5% - 2px),
+    var(--bg) calc(5% - 2px),
+    var(--bg) 5%
+  );
+  pointer-events: none;
+}
+
+/* ---------- Área de juego ---------- */
+
+.stage {
+  position: relative;
+  width: min(100%, calc((100dvh - var(--reserved)) * 0.75));
+  aspect-ratio: 3 / 4;
+  border: 1px solid var(--green-dim);
+  box-shadow: 0 0 24px rgba(15, 61, 28, 0.6), inset 0 0 40px rgba(0, 0, 0, 0.6);
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.stage.lost {
+  border-color: rgba(255, 77, 77, 0.7);
+  box-shadow: 0 0 30px rgba(255, 77, 77, 0.35);
+}
+
+.stage.won {
+  border-color: var(--green);
+  box-shadow: 0 0 34px rgba(61, 255, 122, 0.5);
+}
+
+canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.scanlines {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: repeating-linear-gradient(
+    to bottom,
+    rgba(255, 255, 255, 0.03) 0 1px,
+    transparent 1px 3px
+  );
+}
+
+/* ---------- Overlays ---------- */
+
+.overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  padding: 20px;
+  text-align: center;
+  background: rgba(2, 4, 3, 0.84);
+  animation: fadeIn 0.25s ease-out;
+}
+
+.overlay.hidden { display: none; }
+
+.title {
+  font-size: clamp(22px, 6vw, 34px);
+  font-weight: normal;
+  letter-spacing: 0.2em;
+  color: var(--green);
+  text-shadow: 0 0 12px var(--green), 0 0 30px rgba(61, 255, 122, 0.5);
+}
+
+.overlay.over .title {
+  color: var(--red);
+  text-shadow: 0 0 12px var(--red), 0 0 30px rgba(255, 77, 77, 0.5);
+  animation: glitch 0.5s steps(2) 3;
+}
+
+.overlay.win .title { animation: pulse 1.2s ease-in-out infinite; }
+
+.subtitle {
+  font-size: clamp(11px, 2.8vw, 14px);
+  line-height: 1.6;
+  color: var(--green-text);
+}
+
+.subtitle.dim { opacity: 0.55; font-size: clamp(10px, 2.4vw, 12px); }
+
+.btn {
+  margin-top: 8px;
+  font: inherit;
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  padding: 10px 28px;
+  background: transparent;
+  color: var(--green);
+  border: 1px solid var(--green);
+  cursor: pointer;
+  box-shadow: 0 0 12px rgba(61, 255, 122, 0.35), inset 0 0 12px rgba(61, 255, 122, 0.1);
+  transition: background 0.12s, color 0.12s, box-shadow 0.12s;
+}
+
+.btn:hover,
+.btn:focus-visible {
+  background: var(--green);
+  color: var(--bg);
+  box-shadow: 0 0 22px var(--green);
+  outline: none;
+}
+
+/* ---------- Pie / controles ---------- */
+
+.controls-hint {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  width: 100%;
+  white-space: nowrap;
+  font-size: clamp(11px, 2.6vw, 14px);
+  color: var(--green-mid);
+}
+
+.hint-title { letter-spacing: 0.25em; }
+
+.touch-controls { display: none; }
+
+@media (pointer: coarse) {
+  .touch-controls {
+    display: flex;
+    gap: 16px;
+    width: 100%;
+  }
+
+  .touch-btn {
+    flex: 1;
+    height: 60px;
+    font: inherit;
+    font-size: 26px;
+    color: var(--green);
+    background: rgba(61, 255, 122, 0.05);
+    border: 1px solid var(--green-dim);
+    box-shadow: inset 0 0 12px rgba(61, 255, 122, 0.08);
+    touch-action: none;
+    user-select: none;
+    -webkit-user-select: none;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .touch-btn:active {
+    background: rgba(61, 255, 122, 0.25);
+    border-color: var(--green);
+    box-shadow: 0 0 16px rgba(61, 255, 122, 0.4);
+  }
+}
+
+/* ---------- Animaciones ---------- */
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: scale(0.98); }
+  to   { opacity: 1; transform: scale(1); }
+}
+
+@keyframes glitch {
+  0%   { transform: translate(0, 0); }
+  25%  { transform: translate(-3px, 1px); }
+  50%  { transform: translate(3px, -1px); }
+  75%  { transform: translate(-1px, 2px); }
+  100% { transform: translate(0, 0); }
+}
+
+@keyframes pulse {
+  0%, 100% { text-shadow: 0 0 12px var(--green), 0 0 30px rgba(61, 255, 122, 0.5); }
+  50%      { text-shadow: 0 0 22px var(--green), 0 0 50px rgba(61, 255, 122, 0.9); }
+}
