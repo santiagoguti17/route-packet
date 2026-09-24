@@ -3,6 +3,8 @@
 Juego arcade 2D de reflejos: sobrevive 30 segundos esquivando filas de cubos rojos.
 Sin dependencias ni backend: abre `index.html` en cualquier navegador moderno.
 
+**Jugar online:** https://santiagoguti17.github.io/route-packet/
+
 ## Controles
 
 - `A` / `←` — izquierda
